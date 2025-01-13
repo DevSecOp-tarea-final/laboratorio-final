@@ -23,5 +23,5 @@ jobs:
             -X POST \
             'https://sonarcloud.io/api/projects/create' \
             -d "name=${{ github.event.repository.name }}" \
-            -d "project=${{ github.event.repository.name }}" \
+            -d "project=pet-clinic" \
             -d "organization=tareafinal"
