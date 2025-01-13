@@ -80,5 +80,19 @@ jobs:
             echo "proyecto ya existe"
           fi
 
+      - name: permisos
+        run: |
+             chmod 777 gradlew
 
-       
+      - name: Run SonarQube Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          REPO_NAME: ${{ github.event.repository.name }}
+        run: ./gradlew sonarqube \
+                -Dsonar.proyectKey=DevSecOp-tarea-final_laboratorio-final \
+                -Dsonar.organization=$SONAR_TOKEN \
+                -Dsonar.host.url=https://sonarcloud.io \
+                -Dsonar.token=$SONAR_TOKEN \
+                -Dsonar.branch.name=pipeline 
+
+    
