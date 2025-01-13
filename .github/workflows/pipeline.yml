@@ -8,26 +8,20 @@ on:
 
 jobs:
   
-  BUILD: 
+  SAST: 
     runs-on: ubuntu-latest
     steps:
 
-      - name: Aqui compilamos
-        run: |
-          echo "Aqui compilamos"
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4.5.0
+        with: 
+          java-version: '17'
+          distribution: 'adopt'
 
-  TEST:
-    runs-on: ubuntu-latest
-    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.2.2       
 
-      - name: Testing
+      - name: Build
         run: |
-          echo "Testing"
-     
-  DEPLOY:
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Deploy DSR
-        run: |
-          echo "Deploy DSR "
+          chmod 777 gradlew
+          ./gradlew build
