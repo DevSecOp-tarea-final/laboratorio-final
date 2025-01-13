@@ -58,7 +58,7 @@ jobs:
           echo $response
           echo $SONAR_TOKEN
           if [ "$response" -ne 200 ]; then
-            echo "el proyecto no existe"
+            echo "El proyecto no existe"
             create_response=$(curl -s -o /dev/null -w "%{http_code}" -u $SONAR_TOKEN: \
               -X POST \
               "https://sonarcloud.io/api/projects/create" \
@@ -67,9 +67,9 @@ jobs:
               -d "organization=devsecop-tarea-final" \
               -d "visibility=public")
             if [ "$create_response" -eq 200 ]; then
-              echo "proyecto creado"
+              echo "Proyecto creado"
             else
-              echo "error creando el proyecto"
+              echo "Error creando el proyecto"
             fi
             curl -s -o /dev/null -w "%{http_code}" -u $SONAR_TOKEN: \
               -X POST \
@@ -77,22 +77,20 @@ jobs:
               -d "name=${BRANCH_NAME}" \
               -d "project=$REPO_NAME"
           else
-            echo "proyecto ya existe"
+            echo "Proyecto ya existe"
           fi
 
-      - name: permisos
+      - name: Set file permissions for gradle wrapper
         run: |
-             chmod 777 gradlew
+             chmod +x gradlew
 
       - name: Run SonarQube Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           REPO_NAME: ${{ github.event.repository.name }}
         run: ./gradlew sonarqube \
-                -Dsonar.proyectKey=DevSecOp-tarea-final_laboratorio-final \
-                -Dsonar.organization=$SONAR_TOKEN \
+                -Dsonar.projectKey=DevSecOp-tarea-final_laboratorio-final \
+                -Dsonar.organization=devsecop-tarea-final \
                 -Dsonar.host.url=https://sonarcloud.io \
-                -Dsonar.token=$SONAR_TOKEN \
-                -Dsonar.branch.name=pipeline 
-
-    
+                -Dsonar.login=$SONAR_TOKEN \
+                -Dsonar.branch.name=${{ github.ref_name }}
