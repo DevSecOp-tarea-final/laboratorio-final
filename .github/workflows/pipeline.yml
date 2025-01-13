@@ -1,71 +1,69 @@
-name: Worlflow
+name: Workflow
 
 on:
-  
   push:
-   branches:
-    - pipeline
+    branches:
+      - pipeline
 
 jobs:
-  
-  SAST: 
+  SAST:
     runs-on: ubuntu-24.04
     steps:
-
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4.5.0
-        with: 
+        uses: actions/setup-java@v3
+        with:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: Set enviromment
-        run: echo "BRANCH_NAME=${{ github.ref.name }}" >> $GITHUB_ENV
+      - name: Set environment
+        run: echo "BRANCH_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
 
-      - name: validate and configure build.gradle
-        env: 
+      - name: Validate and configure build.gradle
+        env:
           SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
         run: |
           if [ -f "build.gradle" ]; then
-           echo "Encontro el archivo"
-           echo "validar plugin"
-            if ! grep -q 'id "org.sonarqube" version "3.3"' build.gradle; then
+            echo "Encontro el archivo"
+            if ! grep -q 'id "org.sonarqube" version "4.3.0.3225"' build.gradle; then
               echo "No esta el plugin"
-              sed -i '/plugins {/a \    id "org.sonarqube" version "3.3"' build.gradle
+              sed -i '/plugins {/a \    id "org.sonarqube" version "4.3.0.3225"' build.gradle
             else
-            echo "ya esta el pluging"
+              echo "ya esta el plugin"
             fi
           else
             echo "no se encontro el archivo gradle"
           fi
 
-      - name: validando si existe el proyecto en sonarcloud
-        env: 
+      - name: Validate if the project exists in SonarCloud
+        env:
           SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
           REPO_NAME: ${{ github.event.repository.name }}
         run: |
-              response=$(curl -s -o /dev/null -w "%{http_code}" -u $SONAR_TOKEN: \
-                -X GET \
-                'https://sonarcloud.io/api/projects/search?projects=$REPO_NAME')
-              if [ "$response" -ne 200 ]; then
-               echo "el proyecto no existe"
-               create_response=$(curl -s -o /dev/null -w "%{http_code}" -u $SONAR_TOKEN: \
-                -X POST \
-                'https://sonarcloud.io/api/projects/create' \
-                -d "name=$REPO_NAME" \
-                -d "project=$REPO_NAME" " \
-                -d "organization=tareafinal" \
-                -d 'visibility=public')
-                if [ "$create_response" -ne 201 ]; then
-                 echo "proyecto creado"
-                fi
-              curl -s -o /dev/null -w "%{http_code}" -u $SONAR_TOKEN: \
-                -X POST \
-                'https://sonarcloud.io/api/project_branches/rename' \
-                -d "name=${{ github.ref.name }}" \
-                -d "project=$REPO_NAME" "
-              else
-                echo "proyecto ya existe"
-          
+          response=$(curl -s -o /dev/null -w "%{http_code}" -u $SONAR_TOKEN: \
+            -X GET \
+            "https://sonarcloud.io/api/projects/search?projects=$REPO_NAME")
+          if [ "$response" -ne 200 ]; then
+            echo "el proyecto no existe"
+            create_response=$(curl -s -o /dev/null -w "%{http_code}" -u $SONAR_TOKEN: \
+              -X POST \
+              "https://sonarcloud.io/api/projects/create" \
+              -d "name=$REPO_NAME" \
+              -d "project=$REPO_NAME" \
+              -d "organization=tareafinal" \
+              -d "visibility=public")
+            if [ "$create_response" -eq 200 ]; then
+              echo "proyecto creado"
+            else
+              echo "error creando el proyecto"
+            fi
+            curl -s -o /dev/null -w "%{http_code}" -u $SONAR_TOKEN: \
+              -X POST \
+              "https://sonarcloud.io/api/project_branches/rename" \
+              -d "name=${BRANCH_NAME}" \
+              -d "project=$REPO_NAME"
+          else
+            echo "proyecto ya existe"
+          fi
