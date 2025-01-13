@@ -19,4 +19,9 @@ jobs:
           distribution: 'adopt'
       - name: creando proyecto en sonarcloud
         run: |
-          curl -f -X POST -u '${{ secrets.SONAR_TOKEN }}:' "https://sonarcloud.io/api/projects/create" -d 'name=${{ github.event.repository.name }}' -d 'organization=tareafinal' -d 'visibility=public'
+          curl -u ${{ secrets.SONARCLOUD_TOKEN }}: \
+            -X POST \
+            'https://sonarcloud.io/api/projects/create' \
+            -d "name=${{ github.event.repository.name }}" \
+            -d "project=${{ github.event.repository.name }}" \
+            -d "organization=tareafinal"
