@@ -34,7 +34,7 @@ jobs:
             if ! grep -q 'id "org.sonarqube" version "3.3"' build.gradle; then
               echo "No esta el plugin"
               sed -i '/plugins {/a \    id "org.sonarqube" version "3.3"' build.gradle
-           else
+            else
             echo "ya esta el pluging"
             fi
           else
