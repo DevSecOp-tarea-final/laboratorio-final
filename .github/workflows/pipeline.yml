@@ -55,6 +55,7 @@ jobs:
           response=$(curl -s -o /dev/null -w "%{http_code}" -u $SONAR_TOKEN: \
             -X GET \
             "https://sonarcloud.io/api/projects/search?projects=devsecop-tarea-final_$REPO_NAME&organization=devsecop-tarea-final")
+          echo $response
           if [ "$response" -ne 200 ]; then
             echo "el proyecto no existe"
             create_response=$(curl -s -o /dev/null -w "%{http_code}" -u $SONAR_TOKEN: \
@@ -62,7 +63,7 @@ jobs:
               "https://sonarcloud.io/api/projects/create" \
               -d "name=$REPO_NAME" \
               -d "project=$REPO_NAME" \
-              -d "organization=DevSecOp-tarea-final" \
+              -d "organization=devsecop-tarea-final" \
               -d "visibility=public")
             if [ "$create_response" -eq 200 ]; then
               echo "proyecto creado"
