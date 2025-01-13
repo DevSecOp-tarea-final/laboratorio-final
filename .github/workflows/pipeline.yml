@@ -52,10 +52,11 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
           REPO_NAME: ${{ github.event.repository.name }}
         run: |
-          response=$(curl  -u $SONAR_TOKEN: \
+          response=$(curl  -s -o /dev/null -w "%{http_code}" -u $SONAR_TOKEN: \
             -X GET \
-            "https://sonarcloud.io/api/projects/search?projects=devsecop-tarea-final_$REPO_NAME&organization=devsecop-tarea-final")
+            "https://sonarcloud.io/api/projects/search?projects=DevSecOp-tarea-final_laboratorio-final&organization=devsecop-tarea-final")
           echo $response
+          echo $SONAR_TOKEN
           if [ "$response" -ne 200 ]; then
             echo "el proyecto no existe"
             create_response=$(curl -s -o /dev/null -w "%{http_code}" -u $SONAR_TOKEN: \
