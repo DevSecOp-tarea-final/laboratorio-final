@@ -21,6 +21,16 @@ jobs:
       - name: Set environment
         run: echo "BRANCH_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
 
+      - name: Create build.gradle if not exists
+        run: |
+          if [ ! -f "build.gradle" ]; then
+            echo 'plugins { id "java" }' > build.gradle
+            echo 'repositories { mavenCentral() }' >> build.gradle
+            echo 'dependencies { implementation "org.springframework.boot:spring-boot-starter:2.5.4" }' >> build.gradle
+          else
+            echo "build.gradle ya existe"
+          fi
+
       - name: Validate and configure build.gradle
         env:
           SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
