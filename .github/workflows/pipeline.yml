@@ -30,16 +30,10 @@ jobs:
           else
             echo "build.gradle ya existe"
           fi
-      - name: prueba
-        run: |
-          response=$(curl -s -o /dev/null -w "%{http_code}" -u e9f138a07b040518aa61a4e3ddcb021eb8aa6488: \
-          -X GET "https://sonarcloud.io/api/projects/search?projects=DevSecOp-tarea-final_laboratorio-final&organization=devsecop-tarea-final")
-          echo $response
-          echo $SONAR_TOKEN
 
       - name: Validate and configure build.gradle
         env:
-          SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           if [ -f "build.gradle" ]; then
             echo "Encontro el archivo"
@@ -55,7 +49,7 @@ jobs:
 
       - name: Validate if the project exists in SonarCloud
         env:
-          SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           REPO_NAME: ${{ github.event.repository.name }}
         run: |
           response=$(curl  -s -o /dev/null -w "%{http_code}" -u $SONAR_TOKEN: \
