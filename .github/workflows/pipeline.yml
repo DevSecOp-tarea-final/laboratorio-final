@@ -1,0 +1,33 @@
+name: Worlflow
+
+on:
+  
+  push:
+   branches:
+    - main
+
+jobs:
+  
+  BUILD: 
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Aqui compilamos
+        run: |
+          echo "Aqui compilamos"
+
+  TEST:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Testing
+        run: |
+          echo "Testing"
+     
+  DEPLOY:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Deploy DSR
+        run: |
+          echo "Deploy DSR"
