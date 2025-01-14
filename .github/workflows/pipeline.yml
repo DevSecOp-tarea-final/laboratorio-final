@@ -118,3 +118,22 @@ jobs:
         with:
           name: dependency-check-report
           path: ./reports
+  
+
+  imagen:
+    needs: SCA
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build -t ${{ github.event.repository.name }} .
+
+      - name: Push Docker image
+        env:
+          DOCKER_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          REPO_NAME: ${{ github.event.repository.name }}
+        run: |
+          echo $DOCKER_TOKEN | docker login ghcr.io -u pimpo7 --password-stdin
+          docker push ghcr.io/$REPO_NAME:latest
