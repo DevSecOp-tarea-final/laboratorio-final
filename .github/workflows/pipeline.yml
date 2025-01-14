@@ -56,9 +56,20 @@ jobs:
 
       - name: Install sonar-scanner
         run: npm install sonar-scanner --save-dev
-
+      
+      - name: Set up sonar-project.properties
+        run: |
+          echo "sonar.projectKey=DevSecOp-tarea-final_${{ github.event.repository.name }}" > sonar-project.properties
+          echo "sonar.organization=devsecop-tarea-final" >> sonar-project.properties
+          echo "sonar.host.url=https://sonarcloud.io" >> sonar-project.properties
+          echo "sonar.login=${{ secrets.SONAR_TOKEN }}" >> sonar-project.properties
+          echo "sonar.sources=./" >> sonar-project.properties
+          echo "sonar.language=js" >> sonar-project.properties
+          echo "sonar.tests=./tests" >> sonar-project.properties
+          echo "sonar.javascript.lcov.reportPaths=coverage/lcov-report/index.html" >> sonar-project.properties
+      
       - name: Run SonarQube Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           REPO_NAME: ${{ github.event.repository.name }}
-        run: ./node_modules/.bin/sonar-scanner -X -Dsonar.token=$SONAR_TOKEN 
+        run: ./node_modules/.bin/sonar-scanner -X
