@@ -61,8 +61,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           REPO_NAME: ${{ github.event.repository.name }}
-        run: ./node_modules/.bin/sonar-scanner \
+        run: ./node_modules/.bin/sonar-scanner -X \
           -Dsonar.projectKey=DevSecOp-tarea-final_${REPO_NAME} \
-          -Dsonar.host.url=https://sonarcloud.io \
           -Dsonar.login=$SONAR_TOKEN \
           -Dsonar.branch.name=${{ github.ref_name }}
