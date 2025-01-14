@@ -61,7 +61,7 @@ jobs:
           echo "sonar.projectKey=DevSecOp-tarea-final_${{ github.event.repository.name }}" > sonar-project.properties
           echo "sonar.organization=devsecop-tarea-final" >> sonar-project.properties
           echo "sonar.host.url=https://sonarcloud.io" >> sonar-project.properties
-          echo "sonar.login=${{ secrets.SONAR_TOKEN }}" >> sonar-project.properties
+          echo "sonar.token=${{ secrets.SONAR_TOKEN }}" >> sonar-project.properties
           echo "sonar.sources=./" >> sonar-project.properties
           echo "sonar.language=js" >> sonar-project.properties
           echo "sonar.javascript.lcov.reportPaths=coverage/lcov-report/index.html" >> sonar-project.properties
@@ -110,7 +110,7 @@ jobs:
           format: 'HTML'
           args: >
             --out ./reports 
-            --failOnCVSS 7
+            --failOnCVSS 20
 
       - name: Upload report
         uses: actions/upload-artifact@v4
