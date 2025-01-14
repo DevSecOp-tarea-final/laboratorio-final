@@ -65,7 +65,6 @@ jobs:
           echo "sonar.login=${{ secrets.SONAR_TOKEN }}" >> sonar-project.properties
           echo "sonar.sources=./" >> sonar-project.properties
           echo "sonar.language=js" >> sonar-project.properties
-          echo "sonar.tests=./tests" >> sonar-project.properties
           echo "sonar.javascript.lcov.reportPaths=coverage/lcov-report/index.html" >> sonar-project.properties
       
       - name: Run SonarQube Analysis
