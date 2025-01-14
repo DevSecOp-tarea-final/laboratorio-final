@@ -137,4 +137,18 @@ jobs:
     
       - name: Build Docker image
         run: |
-            docker build -t my-image:latest .
+            docker build -t laboratorio-final:latest .
+            
+      - name: Scan Docker image with Trivy
+        uses: aquasecurity/trivy-action@v0.11.0
+        with:
+          image-ref: laboratorio-final:latest
+          format: table
+          exit-code: 1
+          severity: HIGH,CRITICAL
+
+      - name: Upload Trivy report
+        uses: actions/upload-artifact@v3
+        with:
+          name: trivy-report
+          path: trivy-report.txt
