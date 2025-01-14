@@ -57,7 +57,7 @@ jobs:
       - name: Install sonar-scanner
         run: npm install sonar-scanner --save-dev
 
-        - name: Run SonarQube Analysis
+      - name: Run SonarQube Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           REPO_NAME: ${{ github.event.repository.name }}
